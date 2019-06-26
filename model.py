@@ -43,7 +43,7 @@ class BaseModel(object):
 
         self.path = model_path
         self.name = name
-        self.load()
+        ##self.load()
 
     def fit(self, train_data, valid_data, epochs=10, batchsize=32, **kwargs):
         """Training function
