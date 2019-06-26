@@ -1,6 +1,6 @@
 import argparse
 
-from keras.layers import (
+from tensorflow.python.keras.layers import (
     Conv2D, BatchNormalization, Activation,
     MaxPooling2D, Dense, Flatten
 )
@@ -71,19 +71,21 @@ def arg_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("epoch", type=int, help="Epochs")
     parser.add_argument("--model_path", default="model/vggnet5.h5", type=str, help="model path (default: model/vggnet5.h5)")
+    parser.add_argument("--export_dir", default="freeze", type=str, help="export path")
 
     args = parser.parse_args()
-    return args.epoch, args.model_path
+    return args.epoch, args.model_path, args.export_dir
 
 
 def main():
-    EPOCH, MODEL_PATH = arg_parser()
+    EPOCH, MODEL_PATH, EXPORT_DIR = arg_parser()
 
     # (X, y)
     train, valid, _ = load_mnist(samplewise_normalize=True)
 
     vggnet = VGGNet5(MODEL_PATH)
     vggnet.fit((train[0], train[1]), (valid[0], valid[1]), EPOCH)
+    vggnet.freeze(EXPORT_DIR)
 
 
 if __name__ == '__main__':

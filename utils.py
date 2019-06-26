@@ -1,8 +1,8 @@
 import numpy as np
-from keras.preprocessing.image import ImageDataGenerator
+from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.examples.tutorials.mnist import input_data
-from keras.utils import plot_model
-from keras.models import load_model
+from tensorflow.python.keras.utils import plot_model
+from tensorflow.python.keras.models import load_model
 
 
 def normalize_image_array(image_array):
@@ -57,6 +57,10 @@ def load_mnist(samplewise_normalize=True):
         train_X = normalize_image_array(train_X)
         valid_X = normalize_image_array(valid_X)
         test_X = normalize_image_array(test_X)
+
+    #train_X = train_X[:100]
+    #train_y = train_y[:100]
+    
 
     train_X = np.reshape(train_X, [-1, 28, 28, 1])
     valid_X = np.reshape(valid_X, [-1, 28, 28, 1])

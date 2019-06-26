@@ -1,8 +1,11 @@
 import os
+import time
 
-from keras.layers import Input
-from keras.models import Model
-from keras.callbacks import ModelCheckpoint
+import tensorflow as tf
+from tensorflow.python.keras.layers import Input
+from tensorflow.python.keras.models import Model
+from tensorflow.python.keras.callbacks import ModelCheckpoint
+from tensorflow.python.keras import backend as K
 from utils import train_generator
 
 
@@ -40,12 +43,13 @@ class BaseModel(object):
 
         self.model = Model(X, y, name=name)
         self.model.compile("adam", "categorical_crossentropy", ["accuracy"])
+        self.model.summary()
 
         self.path = model_path
         self.name = name
         ##self.load()
 
-    def fit(self, train_data, valid_data, epochs=10, batchsize=32, **kwargs):
+    def fit(self, train_data, valid_data, epochs=10, batchsize=128, **kwargs):
         """Training function
 
         Evaluate at each epoch against validation data
@@ -76,6 +80,7 @@ class BaseModel(object):
         X_val, y_val = valid_data
 
         N = X_train.shape[0]
+        print("[DEBUG] N -> {}", X_train.shape)
         N_val = X_val.shape[0]
 
         self.model.fit_generator(train_gen.flow(X_train, y_train, batchsize),
@@ -92,6 +97,11 @@ class BaseModel(object):
         Should not be used manually
         """
         self.model.save_weights(self.path)
+
+    def freeze(self, export_dir):
+        """ Save Freeze Model 
+        """
+        tf.saved_model.simple_save(K.get_session(), os.path.join(export_dir, str(int(time.time()))), inputs={'inputs': self.model.input}, outputs={ t.name: t for t in self.model.outputs})
 
     def load(self):
         """Load weights from self.path """
