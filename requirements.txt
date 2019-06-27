@@ -1,4 +1,2 @@
-Keras==2.0.4
-numpy==1.12.1
-tensorflow-gpu==1.1.0
-h5py
+Keras==2.2.4
+Scipy
